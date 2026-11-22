@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 
 MAX_FAILURES = 15
-FAILURE_LINE = re.compile(r"^\S+:\d+: ")
+FAILURE_LINE = re.compile(r"^.*:\d+: ")
 
 
 def git(cwd: Path, *args: str) -> list[str]:

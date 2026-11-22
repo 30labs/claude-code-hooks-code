@@ -6,6 +6,9 @@ MORE_BLOCKED = [
     "rm -rf ./*",
     "rm -r -f ~/projects",
     "sudo /bin/rm -fr /var/lib",
+    "sudo -u root rm -rf /",
+    "cat <<EOF\ndon't\nEOF\nrm -r -f ~/",
+    "cat <<EOF\ndon't\nEOF\nrm --recursive --force ~/",
     "cd src && rm -rf ../../data",
     "bash -c 'rm -rf $HOME'",
     "git push --force origin main",
@@ -23,3 +26,4 @@ HOOK_FILES = [
     ".claude/settings.local.json",
     ".claude/hooks/guard.py",
 ]
+SECRET_FILES = [".aws/.env.example"]

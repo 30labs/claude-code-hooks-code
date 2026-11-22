@@ -16,10 +16,10 @@ from hookkit import Event, field, respond, run
 
 
 def is_secret(path: Path) -> bool:
-    if path.name in SAFE_NAMES:
-        return False
     if SECRET_DIRS & set(path.parts):
         return True
+    if path.name in SAFE_NAMES:
+        return False
     return any(fnmatch(path.name, p) for p in SECRET_NAMES)
 
 

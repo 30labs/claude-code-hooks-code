@@ -20,7 +20,13 @@ COUNTS = Path(tempfile.gettempdir()) / "stop-check"
 
 def changed_python(cwd: Path) -> list[str]:
     status = git(cwd, "status", "--porcelain", "-uall")
-    paths = [line[3:] for line in status]
+    paths = []
+    for line in status:
+        path = line[3:]
+        if "R" in line[:2] and " -> " in path:
+            paths.extend(path.split(" -> ", 1))
+        else:
+            paths.append(path)
     base = git(cwd, "merge-base", "HEAD", BASE)
     if base:
         paths += git(cwd, "diff", "--name-only", base[0])

@@ -4,7 +4,12 @@ import re
 from collections.abc import Callable
 
 from guard_rm import rm_rule
-from guard_shell import Words, flags, split_commands
+from guard_shell import (
+    ROUGH_RM,
+    Words,
+    flags,
+    split_commands,
+)
 from hookkit import Event, block, field, run
 
 Rule = Callable[[Words], str | None]
@@ -35,8 +40,6 @@ def git_rule(words: Words) -> str | None:
 PIPE_TO_SHELL = re.compile(
     r"\b(curl|wget)\b[^|;&]*\|\s*(sudo\s+)?(ba|z)?sh\b"
 )
-ROUGH_RM = re.compile(r"\brm\s+-\w*\s+[/~$]")
-
 RULES: list[Rule] = [rm_rule, git_rule]
 
 
@@ -50,7 +53,7 @@ def verdict(line: str) -> str | None:
         commands = split_commands(line)
     except ValueError:
         if ROUGH_RM.search(line):
-            return "Unparseable command with rm on a root path."
+            return "Unparseable forced recursive rm."
         return None
     for words in commands:
         for rule in RULES:
