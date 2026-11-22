@@ -4,7 +4,9 @@ import json
 import re
 from pathlib import Path
 
-SCRIPT = re.compile(r"\$CLAUDE_PROJECT_DIR/(\S+?\.py)")
+SCRIPT = re.compile(
+    r"""\$CLAUDE_PROJECT_DIR/(\S+?\.py)(?=$|["'\s])"""
+)
 
 
 def registered_commands(settings: Path) -> list[str]:

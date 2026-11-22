@@ -10,6 +10,12 @@ WRAPPERS = {"sudo", "env", "command", "exec", "nohup", "time"}
 SHELLS = {"sh", "bash", "zsh"}
 ASSIGNMENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 REDIRECT = re.compile(r"[<>&|]*[<>][<>&|]*")
+ROUGH_RM = re.compile(
+    r"\brm\b"
+    r"(?=[^;&|]*(?:--recursive|-\w*[rR]\w*))"
+    r"(?=[^;&|]*(?:--force|-\w*f\w*))"
+    r"[^;&|]*\s[/~$]"
+)
 
 
 def split_commands(line: str) -> list[Words]:
@@ -55,9 +61,29 @@ def unwrap(words: Words) -> Words:
     while words and (
         words[0] in WRAPPERS or ASSIGNMENT.match(words[0])
     ):
-        words = words[1:]
+        if words[0] == "sudo":
+            words = sudo_command(words)
+        else:
+            words = words[1:]
     if words:
         words = [words[0].rsplit("/", 1)[-1], *words[1:]]
+    return words
+
+
+def sudo_command(words: Words) -> Words:
+    """Skip supported sudo options before its command."""
+    words = words[1:]
+    while words:
+        if words[0] == "--":
+            return words[1:]
+        if words[0] in {"-u", "-g"}:
+            words = words[2:]
+        elif words[0].startswith("--user="):
+            words = words[1:]
+        elif words[0] in {"-E", "-H", "-n", "-i", "-s"}:
+            words = words[1:]
+        else:
+            return words
     return words
 
 
