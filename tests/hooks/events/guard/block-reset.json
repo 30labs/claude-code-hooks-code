@@ -1,0 +1,12 @@
+{
+  "session_id": "3f0c9a1e",
+  "transcript_path": "/tmp/t.jsonl",
+  "cwd": ".",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "git reset --hard origin/main",
+    "description": "Reset to remote"
+  },
+  "tool_use_id": "toolu_01"
+}
